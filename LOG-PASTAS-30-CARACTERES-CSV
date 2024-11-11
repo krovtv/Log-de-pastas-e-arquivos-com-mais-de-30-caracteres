@@ -1,0 +1,32 @@
+# Caminho do diretório para análise
+$directoryPath = "T:\Kauã G3"  # Substitua pelo caminho desejado
+
+# Caminho do arquivo de log
+$logFile = "T:\Kauã G3\Relatorios\log_pastas_longas.csv"  # Caminho onde o log será salvo
+
+# Verifica se o arquivo de log já existe e, se existir, remove para evitar duplicação
+if (Test-Path $logFile) {
+    Remove-Item $logFile
+}
+
+# Adiciona cabeçalho ao log
+Add-Content -Path $logFile -Value "Log de Pastas com Nomes Longos (mais de 30 caracteres)"
+Add-Content -Path $logFile -Value "Data: $(Get-Date)"
+Add-Content -Path $logFile -Value "`nPasta(s) com mais de 30 caracteres:`n"
+
+# Obter todas as pastas e subpastas
+$folders = Get-ChildItem2 -Path $directoryPath -Directory -Recurse
+
+# Processar cada pasta
+foreach ($folder in $folders) {
+    $folderName = $folder.Name
+    if ($folderName.Length -gt 30) {
+        # Registrar pasta no log
+        Add-Content -Path $logFile -Value "$($folder.FullName) ; $($folder.Name.Length) ; caracteres"
+    }
+}
+
+# Mensagem de conclusão
+Write-Output "Análise concluída. Verifique o log em $logFile"
+
+#BY KROZZ
